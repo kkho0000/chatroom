@@ -1,6 +1,5 @@
 package space.kkho.chatroom.controller;
 
-import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +20,7 @@ public class LoginController {
     IUserService userService;
 
     @PostMapping
-    public ResponseMessage<Null> login(@RequestBody User user) {
+    public ResponseMessage<String> login(@RequestBody User user) {
         // login
         if ( userService.login(user) == false ) {
             // return ResponseMessage.error("Username or password is incorrect");
