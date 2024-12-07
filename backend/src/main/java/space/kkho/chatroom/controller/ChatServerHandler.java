@@ -33,7 +33,9 @@ public class ChatServerHandler extends SimpleChannelInboundHandler<TextWebSocket
             System.out.println("收到消息: " + chatMessage.getContent());
             ChatMessage msg_ = new ChatMessage(chatMessage.getContent(), chatMessage.getSender(), chatMessage.getType());
             ChatMessage msg_re = new ChatMessage(chatMessage.getContent(), chatMessage.getSender(), chatMessage.getType());
-            msg_re.setType(ChatMessage.MessageType.CONFIRM);
+            if (msg_re.getType() == ChatMessage.MessageType.CHAT) {
+                msg_re.setType(ChatMessage.MessageType.CONFIRM);
+            }
             for (var channel : channels) {
                 if (channel != ctx.channel()) {
                     channel.writeAndFlush( new TextWebSocketFrame(objectMapper.writeValueAsString(msg_)) );

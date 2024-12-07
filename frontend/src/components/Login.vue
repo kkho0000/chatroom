@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import axios from 'axios';
-import { defineComponent } from 'vue';
+import { defineComponent, inject } from 'vue';
 
 export default defineComponent({
   name: 'Login',
@@ -32,14 +32,15 @@ export default defineComponent({
       username: '',
       password: '',
       message: '',
-      isSuccess: false
+      isSuccess: false,
+      baseurl: inject('apiUrl')
     };
   },
   methods: {
     async login() {
       // 登录逻辑
       try {
-        const response = await axios.post('http://localhost:8080/login', {
+        const response = await axios.post(`http://${this.baseurl}:8080/login`, {
           username: this.username,
           password: this.password
         });
@@ -61,7 +62,7 @@ export default defineComponent({
     },
     async register() {
       try {
-        const response = await axios.post('http://localhost:8080/user', {
+        const response = await axios.post(`http://${this.baseurl}:8080/user`, {
           username: this.username,
           password: this.password
         });

@@ -1,12 +1,17 @@
 <template>
   <div class="chat-container">
     <div class="messages">
-      <div v-for="(message, index) in messages" :key="index" class="message" :style="getReverse(message)">
-        <div class="username-container">
-          <span class="username">{{ message.sender }}</span>
+      <div v-for="(message, index) in messages" :key="index">
+        <div v-if="message.type === MessageType.CHAT || message.type === MessageType.CONFIRM" class="message" :class="messageClass(message)">
+          <div class="username-container">
+            <span class="username">{{ message.sender }}</span>
+          </div>
+          <div class="text-container">
+            <span class="text">{{ message.content }}</span>
+          </div>
         </div>
-        <div class="text-container">
-          <span class="text">{{ message.content }}</span>
+        <div v-else :class="messageClass(message)">
+            <span class="text" style="text-align: center;">{{ message.sender + message.content }}</span>
         </div>
       </div>
     </div>
@@ -23,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, onUnmounted } from 'vue';
+import { defineComponent, onMounted, ref, onUnmounted, inject } from 'vue';
 import { useRoute } from 'vue-router';
 
 enum MessageType {
@@ -57,6 +62,20 @@ class Message {
         else {
           return "flex-direction: row";
         }
+      },
+      messageClass (msg: Message) {
+        if ( msg.type === MessageType.JOIN ) {
+          return "join-message";
+        } 
+        else if ( msg.type === MessageType.LEAVE ) {
+          return "leave-message";
+        } 
+        else if ( msg.type === MessageType.CONFIRM ) {
+          return "confirm-message";
+        } 
+        else {
+          return "chat-message";
+        }
       }
     },
     setup() {
@@ -66,6 +85,7 @@ class Message {
       const username = ref(route.query.username as string);
       let ws: WebSocket;
       const isConnected = ref(false);
+      const baseUrl = inject('apiUrl');
 
       const sendMessage = () => {
       if (newMessage.value.trim() !== '') {
@@ -83,7 +103,7 @@ class Message {
     };
 
       onMounted(() => {
-        ws = new WebSocket('ws://localhost:9000/ws');
+        ws = new WebSocket(`ws://${baseUrl}:9000/ws`);
 
         ws.onopen = () => {
           console.log('Connected to server');
@@ -117,7 +137,8 @@ class Message {
       return {
         messages,
         newMessage,
-        sendMessage
+        sendMessage,
+        MessageType
       };
     },
   });
@@ -148,10 +169,16 @@ class Message {
 
 .message {
   display: flex;
-  flex-direction: row;
   margin-bottom: 10px;
   font-size: large;
   color: white;
+
+  &.confirm-message {
+    flex-direction: row-reverse;
+  }
+  &.chat-message {
+    flex-direction: row;
+  }
 }
 
 .username-container {
@@ -172,6 +199,11 @@ class Message {
   background-color: #0091ff;
   border: #0091ff 0px solid;
   max-width: 60%;
+}
+
+.text {
+  display: block;
+  text-align: left;
 }
 
 .input-container {

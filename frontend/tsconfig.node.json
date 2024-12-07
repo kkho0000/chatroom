@@ -20,7 +20,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    "types": ["vite/client", "@types/socket.io-client"]
+    "types": ["vite/client"]
   },
   "include": ["vite.config.ts"]
 }

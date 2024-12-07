@@ -12,7 +12,7 @@ import space.kkho.chatroom.domain.User;
 import space.kkho.chatroom.service.IUserService;
 
 @RestController
-@CrossOrigin(origins="http://localhost:5173")
+@CrossOrigin(origins="*")
 @RequestMapping("/login")
 public class LoginController {
     

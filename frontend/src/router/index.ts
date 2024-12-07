@@ -1,16 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { defineAsyncComponent  } from 'vue';
 
 const routes = [
   {
+    path: '/',
+    name: 'root',
+    component: () => import('../components/Login.vue')
+  },
+  {
     path: '/login',
     name: 'Login',
-    component: defineAsyncComponent(() => import('../components/Login.vue'))
+    component: () => import('../components/Login.vue')
   },
   {
     path: '/chat',
     name: 'Chat',
-    component: defineAsyncComponent(() => import('../components/Chat.vue'))
+    component: () => import('../components/Chat.vue')
   }
 ];
 
